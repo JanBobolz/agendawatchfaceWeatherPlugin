@@ -95,9 +95,18 @@ public class WeatherProvider extends AgendaWatchfacePlugin {
 
 			if (obj.has("weather") && obj.getJSONArray("weather").length() > 0)
 				item.line1.text += obj.getJSONArray("weather").getJSONObject(0).getString("description");
-
-			item.line2.text = (obj.has("weather") && obj.getJSONArray("weather").length() > 0 ? obj.getJSONArray("weather").getJSONObject(0).getString("description") + " " : "") + Math.round(obj.getJSONObject("temp").getDouble("min") - 273.15) + "°-"
-					+ Math.round(obj.getJSONObject("temp").getDouble("max") - 273.15) + "°";
+			
+			double min = (obj.getJSONObject("temp").getDouble("min") - 273.15);
+			double max = (obj.getJSONObject("temp").getDouble("max") - 273.15);
+			if (prefs.getBoolean("pref_fahrenheit", false)) {
+				min = min*(9.0/5.0)+32;
+				max = max*(9.0/5.0)+32;
+			}
+			long displayMin = Math.round(min);
+			long displayMax = Math.round(max);
+			
+			item.line2.text = (obj.has("weather") && obj.getJSONArray("weather").length() > 0 ? obj.getJSONArray("weather").getJSONObject(0).getString("description") + " " : "") + displayMin + "°-"
+					+ displayMax + "°";
 
 			item.line1 = item.line2;
 			item.line2 = null; // TODO make this nice and with settings

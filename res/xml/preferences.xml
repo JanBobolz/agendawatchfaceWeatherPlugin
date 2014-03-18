@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
     <EditTextPreference android:summary="What location should the Weather be shown for?" android:key="pref_town" android:title="City" android:defaultValue="Paderborn, de"/>
+    <CheckBoxPreference android:summaryOn="Show Fahrenheit" android:title="Fahrenheit" android:summaryOff="Show Celcius" android:defaultValue="false" android:key="pref_fahrenheit"/>
     
 
 </PreferenceScreen>
