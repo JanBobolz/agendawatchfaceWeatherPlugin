@@ -107,6 +107,7 @@ public class WeatherProvider extends AgendaWatchfacePlugin {
 			
 			item.line2.text = (obj.has("weather") && obj.getJSONArray("weather").length() > 0 ? obj.getJSONArray("weather").getJSONObject(0).getString("description") + " " : "") + displayMin + "°-"
 					+ displayMax + "°";
+			item.line2.text = item.line2.text.replace("intensity ", "");
 
 			item.line1 = item.line2;
 			item.line2 = null; // TODO make this nice and with settings
