@@ -91,7 +91,7 @@ public class WeatherProvider extends AgendaWatchfacePlugin {
 			item.line1.timeDisplay = item.line2.timeDisplay = TimeDisplayType.NONE;
 			item.line1.text = "Weather: ";
 			item.line1.textBold = false;
-			item.line1.overflow = item.line2.overflow = LineOverflowBehavior.NONE;
+			item.line1.overflow = item.line2.overflow = LineOverflowBehavior.OVERFLOW_IF_NECESSARY;
 
 			if (obj.has("weather") && obj.getJSONArray("weather").length() > 0)
 				item.line1.text += obj.getJSONArray("weather").getJSONObject(0).getString("description");
