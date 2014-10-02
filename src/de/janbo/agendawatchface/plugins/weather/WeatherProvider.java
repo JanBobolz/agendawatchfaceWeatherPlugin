@@ -31,6 +31,10 @@ public class WeatherProvider extends AgendaWatchfacePlugin {
 
 	@Override
 	public void onRefreshRequest(Context context) {
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+		if (!prefs.getBoolean("pref_key_weather_activate", true))
+			return;
+		
 		SharedPreferences dataPrefs = context.getSharedPreferences("weatherData", 0);
 		if (Math.abs(System.currentTimeMillis() - dataPrefs.getLong("lastUpdate", 0)) >= 1000 * 60 * 60)
 			context.startService(new Intent(context, WeatherFetchService.class));
@@ -43,6 +47,12 @@ public class WeatherProvider extends AgendaWatchfacePlugin {
 	 */
 	public void publishWeather(Context context) {
 		ArrayList<AgendaItem> result = new ArrayList<AgendaItem>();
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+		if (!prefs.getBoolean("pref_key_weather_activate", true)) {
+			publishData(context, result, false);
+			return;
+		}
+		
 		try {
 			JSONObject data = new JSONObject(context.getSharedPreferences("weatherData", 0).getString("currentForecastDataset", ""));
 			JSONArray list = data.getJSONArray("list");
@@ -87,15 +97,10 @@ public class WeatherProvider extends AgendaWatchfacePlugin {
 			item.priority = 100;
 
 			// Set lines
-			item.line2 = new AgendaItem.Line();
-			item.line1.timeDisplay = item.line2.timeDisplay = TimeDisplayType.NONE;
-			item.line1.text = "Weather: ";
+			item.line1.timeDisplay = TimeDisplayType.NONE;
 			item.line1.textBold = false;
-			item.line1.overflow = item.line2.overflow = LineOverflowBehavior.OVERFLOW_IF_NECESSARY;
+			item.line1.overflow = LineOverflowBehavior.OVERFLOW_IF_NECESSARY;
 
-			if (obj.has("weather") && obj.getJSONArray("weather").length() > 0)
-				item.line1.text += obj.getJSONArray("weather").getJSONObject(0).getString("description");
-			
 			double min = (obj.getJSONObject("temp").getDouble("min") - 273.15);
 			double max = (obj.getJSONObject("temp").getDouble("max") - 273.15);
 			if (prefs.getBoolean("pref_fahrenheit", false)) {
@@ -105,12 +110,9 @@ public class WeatherProvider extends AgendaWatchfacePlugin {
 			long displayMin = Math.round(min);
 			long displayMax = Math.round(max);
 			
-			item.line2.text = (obj.has("weather") && obj.getJSONArray("weather").length() > 0 ? obj.getJSONArray("weather").getJSONObject(0).getString("description") + " " : "") + displayMin + "°-"
+			item.line1.text = (obj.has("weather") && obj.getJSONArray("weather").length() > 0 ? obj.getJSONArray("weather").getJSONObject(0).getString("description") + " " : "") + displayMin + "°-"
 					+ displayMax + "°";
-			item.line2.text = item.line2.text.replace("intensity ", "");
-
-			item.line1 = item.line2;
-			item.line2 = null; // TODO make this nice and with settings
+			item.line1.text = item.line1.text.replace("intensity ", "");
 
 			return item;
 

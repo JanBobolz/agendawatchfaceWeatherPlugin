@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
-    <EditTextPreference android:summary="What location should the Weather be shown for?" android:key="pref_town" android:title="City" android:defaultValue="Paderborn, de"/>
-    <CheckBoxPreference android:summaryOn="Show Fahrenheit" android:title="Fahrenheit" android:summaryOff="Show Celcius" android:defaultValue="false" android:key="pref_fahrenheit"/>
+    <CheckBoxPreference android:summaryOff="Weather is not shown" android:title="Activate Plugin" android:key="pref_key_weather_activate" android:defaultValue="true" android:summaryOn="Weather is shown" android:disableDependentsState="false"/><EditTextPreference android:summary="What location should the Weather be shown for?" android:key="pref_town" android:title="City" android:defaultValue="Paderborn, de" android:dependency="pref_key_weather_activate"/>
+    <CheckBoxPreference android:summaryOn="Show Fahrenheit" android:title="Fahrenheit" android:summaryOff="Show Celcius" android:defaultValue="false" android:key="pref_fahrenheit" android:dependency="pref_key_weather_activate"/>
+    
     
 
 </PreferenceScreen>
